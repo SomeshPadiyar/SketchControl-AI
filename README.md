@@ -68,5 +68,58 @@ It runs entirely on a **free Colab GPU**, and all interactions are handled via a
 
 ---
 
-## 📁 Project Structure
+## 📚 Notebook Overview
+
+**File:** `sketch_editor_colab.ipynb`
+
+This notebook performs:
+- Installation of dependencies  
+- Loading of ControlNet and Inpainting models  
+- Launching a Gradio sketch interface  
+- Image generation and editing based on user input  
+
+---
+
+## ⚙️ How to Run
+
+1. Open the notebook directly in **Google Colab**:  
+2. Run all cells sequentially  
+3. Draw or upload a sketch in the interface  
+4. Generate or inpaint your image interactively  
+
+---
+
+## 📸 Example Screenshot
+
+<p align="center">
+<img src="assets/demo.png" alt="SketchControl-AI Interface" width="600">
+</p>
+
+---
+
+## 🧠 Tech Stack
+
+- **Python 3.10+**  
+- **Google Colab**  
+- **Hugging Face Diffusers**  
+- **ControlNet**  
+- **PyTorch**  
+- **Gradio**
+
+---
+
+## 👨‍💻 Author
+
+**[Somesh Padiyar](https://github.com/SomeshPadiyar)**  
+Project: *SketchControl-AI – Sketch Guided Image Generation and Editing*
+
+---
+
+## ⭐ Acknowledgements
+
+- [Stable Diffusion](https://huggingface.co/CompVis/stable-diffusion-v1-4)  
+- [ControlNet](https://github.com/lllyasviel/ControlNet)  
+- [Hugging Face Diffusers](https://github.com/huggingface/diffusers)  
+- [Gradio](https://github.com/gradio-app/gradio)
+
 
