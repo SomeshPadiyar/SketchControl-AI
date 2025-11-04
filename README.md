@@ -92,7 +92,11 @@ This notebook performs:
 ## 📸 Example Screenshot
 
 <p align="center">
-<img src="assets/demo.png" alt="SketchControl-AI Interface" width="600">
+<img src="assets/demo2.png" alt="SketchControl-AI Interface" width="600">
+</p>
+
+<p align="center">
+<img src="assets/demo1.png" alt="SketchControl-AI Interface" width="600">
 </p>
 
 ---
