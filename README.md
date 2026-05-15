@@ -74,6 +74,29 @@ Using an explicit mask and a localized text prompt, the inpainting pipeline alte
 
 ---
 
+## 🧰 Tech Stack & Libraries
+
+SketchControl-AI Studio leverages a modern Python deep learning stack alongside a reactive web frontend to handle heavy generative workloads smoothly.
+
+### Core Frameworks & UI
+* **Gradio:** Powers the interactive, dark-themed frontend web application, enabling the drawing canvas, custom CSS, and state management.
+* **PyTorch:** The foundational machine learning framework driving all GPU-accelerated tensor operations and model inference.
+
+### Generative AI & Diffusion Pipelines
+* **HuggingFace Diffusers:** The backbone library managing the `StableDiffusionControlNetPipeline` and `StableDiffusionControlNetInpaintPipeline`.
+* **Transformers:** Supports the underlying text-encoding and prompt-processing layers.
+* **Stable Diffusion v1.5 & ControlNet:** Utilizes `runwayml/stable-diffusion-v1-5` and `lllyasviel/control_v11p_sd15_scribble` for the Phase 1 sketch-to-image generation.
+* **DeepFill-v2 GAN (SketchEdit):** The specialized, mask-free local manipulation architecture, loaded via a secure Python subprocess wrapper.
+
+### Image Processing & Utilities
+* **Pillow (PIL):** Essential for dynamic mask extraction, alpha-channel manipulation, and handling user drawing layers (`Image`, `ImageDraw`, `ImageOps`).
+* **NumPy & OpenCV (`cv2`):** Used for advanced array manipulations and image conversions between different model stages.
+
+### Hardware Optimization
+* **Accelerate & Xformers:** Deployed to drastically reduce VRAM consumption and speed up attention mechanisms (via FP16 optimizations) on CUDA GPUs.
+
+---
+
 ## 💻 Installation & Usage
 
 Because this pipeline integrates both `diffusers` (PyTorch) and the original SketchEdit implementation (which relies on specific environment dependencies), **Google Colab is highly recommended** to avoid local environment conflicts. 
