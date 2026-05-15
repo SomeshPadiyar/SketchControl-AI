@@ -1,129 +1,98 @@
-# 🎨 SketchControl-AI: Sketch-Guided Image Generation & Editing
+# SketchControl-AI Studio 🎨
 
-> **Create & edit images from your sketches — powered by Stable Diffusion ControlNet + Inpainting**
+**An Interactive Multi-Stage Framework for Sketch-Guided Image Generation and Local Editing**
 
----
+SketchControl-AI Studio is a unified, multi-stage generative UI that allows users to create highly detailed base images from rough sketches, and iteratively refine them using two distinct editing paradigms: Mask-Free Structural Editing and Mask-Based Contextual Inpainting. 
 
-## 🧠 Overview
-
-**SketchControl-AI** is an interactive web app (built for **Google Colab**) that lets you:
-- 🖌️ **Draw a sketch** to generate images using **ControlNet (Scribble)**  
-- 🧽 **Edit existing images** using **Stable Diffusion Inpainting**  
-- ⚙️ **Customize generation** with prompt text, inference steps, guidance scale, and inpaint strength  
-
-It runs entirely on a **free Colab GPU**, and all interactions are handled via an easy-to-use **Gradio interface**.
+By bridging modern HuggingFace `diffusers` logic with isolated CVPR research repositories via secure subprocess sandboxing, this tool provides a seamless, memory-managed state machine for creative image workflows.
 
 ---
 
-## 🚀 Features
+## 🚀 The Pipeline (How It Works)
 
-✅ ControlNet (Scribble) for sketch-based generation  
-✅ Stable Diffusion Inpainting for precise editing  
-✅ Gradio web interface with image editor  
-✅ Customizable parameters (steps, CFG scale, strength)  
-✅ Works on free Google Colab GPUs  
-✅ Built-in error handling and memory-efficient xFormers support  
+The studio operates in four distinct phases:
 
----
+### Phase 1: Base Generation (ControlNet + SD 1.5)
+* **Model:** Stable Diffusion v1.5 + `control_v11p_sd15_scribble`.
+* **Process:** Acts as a strict architect. Users draw a rough concept sketch and provide a text prompt. ControlNet locks the synthesized image strictly to the contours drawn on the canvas, ensuring the generated scene fits the user's structural blueprint.
 
-## 🧩 Model Architecture
+### Phase 2: Mask-Free Refinement (SketchEdit)
+* **Model:** DeepFill-v2 GAN (optimized for the `Places2` dataset).
+* **Process:** For structural modifications. Users draw partial structural lines directly over the generated base image. The model automatically predicts the target modification region without requiring tedious explicit masks, and seamlessly integrates the new structure into the scene.
 
-- **Base Model:** `runwayml/stable-diffusion-v1-5`  
-- **Inpainting Model:** `runwayml/stable-diffusion-inpainting`  
-- **ControlNet Model:** `lllyasviel/control_v11p_sd15_scribble`  
-- **Scribble Detector:** `lllyasviel/Annotators (HEDdetector)`  
+### Phase 3: Mask-Based Contextual Editing (SD Inpainting)
+* **Model:** RunwayML `Stable-Diffusion-Inpainting`.
+* **Process:** For prompt-driven content replacement. Users explicitly mask a region and provide a secondary text prompt (e.g., "Add a glowing red crystal"). The pipeline alters specific objects while maintaining the global lighting and context of the original scene.
 
----
-
-## ⚙️ Setup Instructions (Colab)
-
-1. **Open in Google Colab**  
-   - Upload your notebook file: `sketch_editor_colab.ipynb`
-
-2. **Change Runtime Type**  
-   - Go to `Runtime` → `Change runtime type` → select **GPU**
-
-3. **Run All Cells**  
-   - It will automatically:
-     - Install dependencies  
-     - Load Stable Diffusion + ControlNet models  
-     - Launch the Gradio app
-
-4. **Interact via Gradio UI**  
-   - Draw a **sketch** (for generation) or upload an **image + mask** (for editing)
-   - Enter your **text prompt**
-   - Click **Generate / Edit**
-   - View and download results directly in the notebook
+### Phase 4: Session Gallery
+* A state management utility that saves all intermediate and final renders directly to a local gallery, allowing users to track their iterative design process and download their entire session history as a ZIP file.
 
 ---
 
-## 🧮 Parameters
+## ⚖️ Mask-Free vs. Mask-Based Approach
 
-| Parameter | Description | Default |
-|------------|--------------|----------|
-| **Steps** | Number of diffusion steps | `30` |
-| **Guidance Scale** | How closely to follow the prompt | `7.5` |
-| **Inpaint Strength** | How strongly masked area is modified | `0.9` |
-| **Sketch Mode** | Enables ControlNet sketch-based generation | `True` |
+Our framework gives users the freedom to choose the right tool for the specific edit they want to make:
 
----
-
-## 📚 Notebook Overview
-
-**File:** `sketch_editor_colab.ipynb`
-
-This notebook performs:
-- Installation of dependencies  
-- Loading of ControlNet and Inpainting models  
-- Launching a Gradio sketch interface  
-- Image generation and editing based on user input  
+| Feature | Phase 2: SketchEdit (Mask-Free) | Phase 3: SD Inpainting (Mask-Based) |
+| :--- | :--- | :--- |
+| **Input Required** | Structural Sketch Strokes | Explicit Bounding Mask + Text Prompt |
+| **Best Used For** | Changing architecture, modifying terrain, adding structural shapes. | Adding specific objects, changing textures, contextual replacements. |
+| **How it Works** | Automatically infers the edit region based on sketch contours. | Prioritizes unmasked surrounding pixels to blend in new text-prompt concepts. |
 
 ---
 
-## ⚙️ How to Run
+## 🖼️ Demo & Visual Results
 
-1. Open the notebook directly in **Google Colab**:  
-2. Run all cells sequentially  
-3. Draw or upload a sketch in the interface  
-4. Generate or inpaint your image interactively  
+Below are the visual outputs representing the step-by-step pipeline from initial sketch to final refined image.
 
----
-
-## 📸 Example Screenshot
-
+### 1. Base Generation
+The model successfully constrains the text prompt within the boundaries of the user's raw sketch.
 <p align="center">
-<img src="assets/demo2.png" alt="SketchControl-AI Interface" width="600">
+  <img src="Demo_image/01.png" width="30%" />
+  <img src="Demo_image/02.png" width="30%" />
 </p>
 
+### 2. SketchEdit Refinement
+The user draws partial structural lines over the base image. The mask-free DeepFill-v2 GAN predicts the region and seamlessly integrates the new structure.
 <p align="center">
-<img src="assets/demo1.png" alt="SketchControl-AI Interface" width="600">
+  <img src="Demo_image/03.png" width="45%" />
+</p>
+
+### 3. SD Inpainting
+Using an explicit mask and a localized text prompt, the inpainting pipeline alters specific objects while maintaining global lighting.
+<p align="center">
+  <img src="Demo_image/04.png" width="45%" />
+  <img src="Demo_image/05.png" width="45%" />
 </p>
 
 ---
 
-## 🧠 Tech Stack
+## 🛠️ Repository Structure
 
-- **Python 3.10+**  
-- **Google Colab**  
-- **Hugging Face Diffusers**  
-- **ControlNet**  
-- **PyTorch**  
-- **Gradio**
+* **`Part_3_Final_Inpainting_vs_SketchEdit/`**: Contains the main Jupyter Notebook/Colab file to run the complete, unified Gradio application.
+* **`Demo_image/`**: Contains sample inputs and output results demonstrating the capabilities of the pipeline.
 
 ---
 
-## 👨‍💻 Author
+## 💻 Installation & Usage
 
-**[Somesh Padiyar](https://github.com/SomeshPadiyar)**  
-Project: *SketchControl-AI – Sketch Guided Image Generation and Editing*
+Because this pipeline integrates both `diffusers` (PyTorch) and the original SketchEdit implementation (which relies on specific environment dependencies), **Google Colab is highly recommended** to avoid local environment conflicts. 
+
+1. Open the main notebook located in `Part_3_Final_Inpainting_vs_SketchEdit/`.
+2. Ensure your Colab runtime is set to **T4 GPU** (or better).
+3. Run the initial setup cells to clone the repositories and download the necessary weights (`places.pth`).
+4. Execute the Gradio UI cell to launch the interactive dark-themed web application.
 
 ---
 
-## ⭐ Acknowledgements
+## 💡 Project Novelty & Architecture Highlights
 
-- [Stable Diffusion](https://huggingface.co/CompVis/stable-diffusion-v1-4)  
-- [ControlNet](https://github.com/lllyasviel/ControlNet)  
-- [Hugging Face Diffusers](https://github.com/huggingface/diffusers)  
-- [Gradio](https://github.com/gradio-app/gradio)
+* **Subprocess Sandboxing:** Bypassed complex dependency conflicts (like conflicting PyTorch versions between SD 1.5 and DeepFillv2) by executing SketchEdit via a secure Python subprocess wrapper.
+* **Unified UI:** Consolidated disparate AI research repositories into a single, intuitive, memory-managed workflow.
 
+---
+**Authors:**
+* Somesh Padiyar
+* Ushneesh Chattopadhyay
 
+*Developed as part of the Deep Learning (AI504) Project at the Indian Institute of Technology, Ropar.*
