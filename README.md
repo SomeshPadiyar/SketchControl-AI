@@ -117,5 +117,3 @@ Because this pipeline integrates both `diffusers` (PyTorch) and the original Ske
 **Authors:**
 * Somesh Padiyar
 * Ushneesh Chattopadhyay
-
-*Developed as part of the Deep Learning (AI504) Project at the Indian Institute of Technology, Ropar.*
